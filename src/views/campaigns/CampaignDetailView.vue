@@ -353,7 +353,7 @@ async function transition(action) {
     const { data } = await api.post(`/admin/campaigns/${route.params.id}/transition/`, { action })
     campaign.value = data
     confirmCancel.value = false
-    const labels = { schedule: 'started', end: 'ended', cancel: 'cancelled' }
+    const labels = { schedule: 'start', end: 'ended', cancel: 'cancelled' }
     toast.show(`Campaign ${labels[action]}.`, 'success')
   } catch (err) {
     toast.show(err.response?.data?.detail ?? 'Action failed.', 'error')
