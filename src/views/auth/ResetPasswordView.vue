@@ -84,7 +84,7 @@ async function handleSubmit() {
   }
   loading.value = true
   try {
-    await api.post('/adm/auth/reset-password/', {
+    await api.post('/admin/auth/reset-password/', {
       token:    route.query.token,
       password: form.value.password,
     })

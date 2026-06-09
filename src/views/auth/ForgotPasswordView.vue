@@ -54,7 +54,7 @@ const sent    = ref(false)
 async function handleSubmit() {
   loading.value = true
   try {
-    await api.post('/adm/auth/forgot-password/', { email: email.value })
+    await api.post('/admin/auth/forgot-password/', { email: email.value })
   } catch { /* silently succeed — don't reveal if email exists */ }
   loading.value = false
   sent.value = true
