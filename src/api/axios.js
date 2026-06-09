@@ -65,7 +65,7 @@ api.interceptors.response.use(
       }
 
       try {
-        const { data } = await axios.post('/api/admin/auth/token/refresh/', {
+        const { data } = await api.post('/admin/auth/token/refresh/', {
           refresh,
         })
         const newAccess = data.access
