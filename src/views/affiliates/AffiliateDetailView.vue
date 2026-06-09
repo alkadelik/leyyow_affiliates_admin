@@ -21,8 +21,9 @@
       </div>
       <div class="actions">
         <button class="btn" @click="showEditModal = true"><i class="ti ti-edit" /> Edit details</button>
+        <button v-if="affiliate.status === 'invited'" class="btn btn--primary" :disabled="resendingInvite" @click="resendInvite"><i class="ti ti-mail-forward" /> {{ resendingInvite ? 'Sending…' : 'Resend invite' }}</button>
         <button v-if="affiliate.status === 'active' || affiliate.status === 'inactive'" class="btn btn--danger" @click="confirmDeactivate = true"><i class="ti ti-user-off" /> Deactivate</button>
-        <button v-else class="btn btn--primary" @click="toggleStatus(true)"><i class="ti ti-user-check" /> Activate</button>
+        <button v-if="affiliate.status === 'deactivated'" class="btn btn--primary" :disabled="togglingStatus" @click="toggleStatus(true)"><i class="ti ti-user-check" /> {{ togglingStatus ? 'Reactivating…' : 'Reactivate' }}</button>
       </div>
     </div>
 
@@ -301,6 +302,7 @@ const merchants        = ref([])
 const merchantFilter   = ref('all')
 const confirmDeactivate = ref(false)
 const togglingStatus   = ref(false)
+const resendingInvite  = ref(false)
 const showEditModal    = ref(false)
 const editForm         = ref({ full_name: '' })
 const saving           = ref(false)
@@ -386,6 +388,18 @@ async function toggleStatus(activate) {
     toast.show(activate ? 'Affiliate activated.' : 'Affiliate deactivated.', 'success')
   } catch { toast.show('Failed to update status.', 'error') }
   finally { togglingStatus.value = false }
+}
+
+async function resendInvite() {
+  resendingInvite.value = true
+  try {
+    await api.post(`/admin/affiliates/${route.params.id}/resend-invite/`)
+    toast.show('Invite resent.', 'success')
+  } catch (err) {
+    toast.show(err.response?.data?.detail ?? 'Failed to resend invite.', 'error')
+  } finally {
+    resendingInvite.value = false
+  }
 }
 
 async function saveEdit() {

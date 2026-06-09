@@ -54,9 +54,10 @@ export function useFormat() {
   /** Affiliate status → { label, class } */
   function affiliateStatus(status) {
     return {
-      active:   { label: 'Active',   cls: 'badge--green' },
-      inactive: { label: 'Inactive', cls: 'badge--gray'  },
-      invited:  { label: 'Invited',  cls: 'badge--amber' },
+      active:      { label: 'Active',      cls: 'badge--green' },
+      inactive:    { label: 'Inactive',    cls: 'badge--gray'  },
+      invited:     { label: 'Invited',     cls: 'badge--amber' },
+      deactivated: { label: 'Deactivated', cls: 'badge--red'   },
     }[status] ?? { label: status, cls: 'badge--gray' }
   }
 
