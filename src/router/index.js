@@ -26,6 +26,11 @@ const AffiliateDetailView  = () => import('@/views/affiliates/AffiliateDetailVie
 const PayoutsView          = () => import('@/views/payouts/PayoutsView.vue')
 const WalletView           = () => import('@/views/wallet/WalletView.vue')
 
+const MerchantsListView    = () => import('@/views/merchants/MerchantsListView.vue')
+const MerchantDetailView   = () => import('@/views/merchants/MerchantDetailView.vue')
+
+const SettingsView         = () => import('@/views/settings/SettingsView.vue')
+
 const routes = [
   // ── Auth (no shell) ──────────────────────────────────────────────────────
   { path: '/login',          component: LoginView,          meta: { public: true } },
@@ -46,6 +51,9 @@ const routes = [
       { path: 'affiliates/:id', name: 'affiliate-detail', component: AffiliateDetailView },
       { path: 'payouts', name: 'payouts', component: PayoutsView },
       { path: 'wallet', name: 'wallet', component: WalletView },
+      { path: 'merchants', name: 'merchants', component: MerchantsListView },
+      { path: 'merchants/:merchant_id', name: 'merchant-detail', component: MerchantDetailView },
+      { path: 'settings', name: 'settings', component: SettingsView },
     ],
   },
 

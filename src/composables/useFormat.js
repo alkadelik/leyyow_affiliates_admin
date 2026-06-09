@@ -75,5 +75,16 @@ export function useFormat() {
     return '—'
   }
 
-  return { naira, date, shortDate, campaignStatus, payoutStatus, affiliateStatus, commissionDisplay }
+  /** Merchant lead status → { label, class } */
+  function merchantStatus(status) {
+    return {
+      trial:      { label: 'Trial',      cls: 'badge--amber' },
+      signed_up:  { label: 'Signed up',  cls: 'badge--gray'  },
+      subscribed: { label: 'Subscribed', cls: 'badge--green' },
+      expired:    { label: 'Expired',    cls: 'badge--red'   },
+      cancelled:  { label: 'Cancelled',  cls: 'badge--red'   },
+    }[status] ?? { label: status, cls: 'badge--gray' }
+  }
+
+  return { naira, date, shortDate, campaignStatus, payoutStatus, affiliateStatus, commissionDisplay, merchantStatus }
 }

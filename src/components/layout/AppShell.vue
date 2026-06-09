@@ -12,8 +12,9 @@
         <!-- Nav -->
         <div class="nav-section">
           <div class="nav-label">Main</div>
-          <NavItem to="/campaigns" icon="speakerphone" label="Campaigns" />
-          <NavItem to="/affiliates" icon="users" label="Affiliates" />
+          <NavItem to="/campaigns" icon="speakerphone"    label="Campaigns" />
+          <NavItem to="/affiliates" icon="users"          label="Affiliates" />
+          <NavItem to="/merchants" icon="building-store"  label="Merchants" />
         </div>
 
         <div class="nav-section" style="margin-top: 8px;">
@@ -23,9 +24,10 @@
         </div>
       </div>
 
-      <!-- User row -->
+      <!-- Bottom: Settings + user row -->
       <div class="sidebar__bottom">
-        <div class="user-row">
+        <NavItem to="/settings" icon="settings" label="Settings" />
+        <div class="user-row" style="margin-top: 12px">
           <div class="user-avatar">{{ initials }}</div>
           <div class="user-info">
             <div class="user-name">{{ auth.user?.full_name }}</div>
