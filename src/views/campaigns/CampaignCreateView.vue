@@ -405,12 +405,9 @@ async function submit(action) {
 </script>
 
 <style scoped>
-.breadcrumb { display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-tertiary);margin-bottom:18px }
-.breadcrumb a { color:var(--text-tertiary) }
-.breadcrumb a:hover { color:var(--brand) }
 .breadcrumb i { font-size:12px }
-.page-title { font-size:22px;font-weight:600;letter-spacing:-0.5px;margin-bottom:4px }
-.page-sub { font-size:13px;color:var(--text-secondary);margin-bottom:24px }
+.page-title { margin-bottom:4px }
+.page-sub { margin-bottom:24px }
 .form-layout { display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start }
 .form-col { display:flex;flex-direction:column;gap:14px }
 .sidebar-col { display:flex;flex-direction:column;gap:12px }
@@ -419,17 +416,7 @@ async function submit(action) {
 .optional-label { font-size:10px;font-weight:400;color:var(--text-tertiary);text-transform:none;letter-spacing:0 }
 .sidebar-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px }
 .sidebar-card-title { font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px }
-.field { display:flex;flex-direction:column;gap:6px }
 .field-row { display:grid;grid-template-columns:1fr 1fr;gap:14px }
-label { font-size:12px;font-weight:500;color:var(--text-secondary) }
-.req { color:var(--red-text) }
-input[type=text],input[type=date],input[type=number],textarea {
-  width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-md);
-  font-size:13px;color:var(--text-primary);background:var(--surface);font-family:var(--font);transition:border-color 0.15s
-}
-input:focus,textarea:focus { outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(254,170,0,0.12) }
-textarea { resize:vertical;min-height:80px;line-height:1.5 }
-.hint { font-size:11px;color:var(--text-tertiary);margin-top:4px;line-height:1.5 }
 .toggle-row { display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--border) }
 .toggle-row:last-of-type { border-bottom:none }
 .toggle-label { font-size:13px;font-weight:500 }
@@ -480,6 +467,4 @@ textarea { resize:vertical;min-height:80px;line-height:1.5 }
 .checklist-row:last-child { border-bottom:none }
 .check--done { font-size:15px;color:var(--green-text) }
 .check--empty { font-size:15px;color:var(--text-tertiary) }
-.spin { animation:spin 0.6s linear infinite }
-@keyframes spin { to { transform:rotate(360deg) } }
 </style>

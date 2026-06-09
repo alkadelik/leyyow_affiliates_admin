@@ -253,20 +253,11 @@ function updatePayout(id, updated) {
 </script>
 
 <style scoped>
-.page-title  { font-size:22px;font-weight:600;letter-spacing:-0.5px;margin-bottom:24px }
-.stats-grid  { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px }
-.stat-card   { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px }
-.stat-card--green { background:#F0FBF5;border-color:#B8E8D0 }
-.stat-card--amber { background:var(--pollen-light);border-color:#F0D890 }
-.stat-label  { font-size:11px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px }
-.stat-value  { font-size:22px;font-weight:600;letter-spacing:-0.5px;line-height:1 }
-.stat-value--green { color:var(--green-text) }
-.stat-value--amber { color:var(--amber-text) }
-.stat-sub    { font-size:11px;color:var(--text-tertiary);margin-top:5px }
+.page-title { margin-bottom:24px }
+.stats-grid { margin-bottom:28px }
 .section-head  { display:flex;align-items:center;gap:10px;margin-bottom:14px }
 .section-title { font-size:14px;font-weight:600 }
 .count-badge   { background:var(--pollen);color:var(--amber-text);padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid #F0D890 }
-/* Pending request cards */
 .req-card    { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:10px }
 .req-avatar  { width:40px;height:40px;border-radius:50%;background:var(--pollen);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--amber-text);flex-shrink:0 }
 .req-info    { flex:1;min-width:0 }
@@ -283,34 +274,8 @@ function updatePayout(id, updated) {
 .btn-decline:hover:not(:disabled) { background:var(--red-bg) }
 .btn-decline:disabled { opacity:0.6;cursor:not-allowed }
 .divider { height:1px;background:var(--border);margin:20px 0 24px }
-/* Toolbar */
-.toolbar     { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px }
-.filter-pills { display:flex;gap:6px;flex-wrap:wrap }
-.pill { padding:5px 13px;border-radius:99px;border:1px solid var(--border);background:var(--surface);font-size:12px;color:var(--text-secondary);cursor:pointer;font-family:var(--font);transition:all 0.1s }
-.pill:hover { background:var(--bg) }
-.pill--active { background:var(--brand);border-color:var(--brand);color:var(--brand-deep);font-weight:600 }
-.search-wrap { display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:7px 11px;min-width:200px }
-.search-wrap i { font-size:15px;color:var(--text-tertiary);flex-shrink:0 }
-.search-wrap input { border:none;background:none;font-size:13px;color:var(--text-primary);font-family:var(--font);width:100% }
-.search-wrap input:focus { outline:none }
-/* Table */
-.table-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden }
-table { width:100%;border-collapse:collapse }
-thead tr { background:var(--surface-warm);border-bottom:1px solid var(--border) }
-th { padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em }
-td { padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle }
-tr:last-child td { border-bottom:none }
-.muted { color:var(--text-tertiary) }
-.badge { display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600 }
-.badge--green { background:var(--green-bg);color:var(--green-text) }
-.badge--amber { background:var(--amber-bg);color:var(--amber-text) }
-.badge--blue  { background:var(--blue-bg);color:var(--blue-text) }
-.badge--gray  { background:var(--gray-bg);color:var(--gray-text) }
-.badge--red   { background:var(--red-bg);color:var(--red-text) }
 .btn-sm { padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--font);transition:background 0.1s }
 .btn-sm--green { border-color:#B8E8D0;color:var(--green-text) }
 .btn-sm--green:hover:not(:disabled) { background:#F0FBF5 }
 .btn-sm:disabled { opacity:0.6;cursor:not-allowed }
-.spin { animation:spin 0.6s linear infinite }
-@keyframes spin { to { transform:rotate(360deg) } }
 </style>

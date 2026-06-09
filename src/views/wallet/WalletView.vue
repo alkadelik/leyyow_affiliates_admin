@@ -188,9 +188,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page-title { font-size:22px;font-weight:600;letter-spacing:-0.5px;margin-bottom:24px }
-
-/* Balance card */
+.page-title { margin-bottom:24px }
 .balance-card { background:var(--brand-deep);border-radius:var(--radius-xl);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:24px }
 .balance-left  { flex:1 }
 .balance-eyebrow { font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px }
@@ -200,57 +198,15 @@ onMounted(async () => {
 .balance-meta    { text-align:right }
 .balance-meta-value { font-size:18px;font-weight:600;color:#fff;letter-spacing:-0.4px }
 .balance-meta-label { font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px }
-
-/* Info box */
 .info-box { background:var(--pollen-light);border:1px solid #F0D890;border-radius:var(--radius-md);padding:12px 14px;font-size:12px;color:var(--amber-text);display:flex;gap:10px;margin-bottom:20px;line-height:1.5 }
 .info-box i { font-size:15px;flex-shrink:0;margin-top:1px }
-
-/* Stats */
-.stats-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px }
-.stat-card  { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px }
-.stat-card--green { background:#F0FBF5;border-color:#B8E8D0 }
-.stat-card--red   { background:var(--red-bg);border-color:#F0C0C0 }
-.stat-card--amber { background:var(--pollen-light);border-color:#F0D890 }
-.stat-label { font-size:11px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px }
-.stat-value { font-size:22px;font-weight:600;letter-spacing:-0.5px;line-height:1 }
-.stat-value--green { color:var(--green-text) }
-.stat-value--red   { color:var(--red-text) }
-.stat-value--amber { color:var(--amber-text) }
-.stat-sub   { font-size:11px;color:var(--text-tertiary);margin-top:5px }
-
 .ledger-head { font-size:14px;font-weight:600;margin-bottom:14px }
-
-/* Toolbar */
-.toolbar { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px }
-.filter-pills { display:flex;gap:6px;flex-wrap:wrap }
-.pill { padding:5px 13px;border-radius:99px;border:1px solid var(--border);background:var(--surface);font-size:12px;color:var(--text-secondary);cursor:pointer;font-family:var(--font);transition:all 0.1s }
-.pill:hover { background:var(--bg) }
-.pill--active { background:var(--brand);border-color:var(--brand);color:var(--brand-deep);font-weight:600 }
-.search-wrap { display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:7px 11px;min-width:240px }
-.search-wrap i { font-size:15px;color:var(--text-tertiary);flex-shrink:0 }
-.search-wrap input { border:none;background:none;font-size:13px;color:var(--text-primary);font-family:var(--font);width:100% }
-.search-wrap input:focus { outline:none }
-
-/* Table */
-.table-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden }
-table { width:100%;border-collapse:collapse }
-thead tr { background:var(--surface-warm);border-bottom:1px solid var(--border) }
-th { padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em }
-td { padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle }
-tr:last-child td { border-bottom:none }
-.muted { color:var(--text-tertiary) }
 .amount-positive { color:var(--green-text) }
 .amount-negative { color:var(--red-text) }
-
-/* Type badge */
 .type-badge { display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;font-size:10px;font-weight:600 }
 .type-badge i { font-size:10px }
 .type-badge--green { background:var(--green-bg);color:var(--green-text) }
 .type-badge--gray  { background:var(--gray-bg);color:var(--gray-text) }
 .type-badge--amber { background:var(--amber-bg);color:var(--amber-text) }
 .type-badge--blue  { background:var(--blue-bg);color:var(--blue-text) }
-
-.badge { display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600 }
-.badge--green { background:var(--green-bg);color:var(--green-text) }
-.badge--amber { background:var(--amber-bg);color:var(--amber-text) }
 </style>

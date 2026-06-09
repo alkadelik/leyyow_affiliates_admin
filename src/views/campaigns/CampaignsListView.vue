@@ -168,93 +168,11 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page-header {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 24px; gap: 16px;
-}
-.page-title { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 3px; }
-.page-sub   { font-size: 13px; color: var(--text-secondary); }
-
-/* Stats */
-.stats-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 14px; margin-bottom: 24px;
-}
-.stat-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 18px 20px;
-}
-.stat-label { font-size: 11px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
-.stat-value { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; line-height: 1; }
-.stat-sub   { font-size: 11px; color: var(--text-tertiary); margin-top: 5px; }
-
-/* Toolbar */
-.toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; margin-bottom: 14px;
-}
-.filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
-.pill {
-  padding: 5px 13px; border-radius: 99px;
-  border: 1px solid var(--border); background: var(--surface);
-  font-size: 12px; color: var(--text-secondary); cursor: pointer;
-  font-family: var(--font); transition: all 0.1s;
-}
-.pill:hover { background: var(--bg); }
-.pill--active { background: var(--brand); border-color: var(--brand); color: var(--brand-deep); font-weight: 600; }
-
-.search-wrap {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-md); padding: 7px 11px; min-width: 220px;
-}
-.search-wrap i { font-size: 15px; color: var(--text-tertiary); flex-shrink: 0; }
-.search-wrap input {
-  border: none; background: none; font-size: 13px; color: var(--text-primary);
-  font-family: var(--font); width: 100%;
-}
-.search-wrap input:focus { outline: none; }
-
-/* Table */
-.table-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); overflow: hidden;
-}
-table { width: 100%; border-collapse: collapse; }
-thead tr { background: var(--surface-warm); border-bottom: 1px solid var(--border); }
-th {
-  padding: 10px 14px; text-align: left;
-  font-size: 11px; font-weight: 600; color: var(--text-tertiary);
-  text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap;
-}
-.table-row { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
-.table-row:last-child { border-bottom: none; }
-.table-row:hover { background: var(--surface-warm); }
-td { padding: 12px 14px; vertical-align: middle; }
-.campaign-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-.campaign-desc { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-.td-muted  { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
-.td-center { text-align: center; font-size: 13px; }
-.td-action { text-align: right; color: var(--text-tertiary); }
-.td-action i { font-size: 16px; }
-
-/* Badges */
-.badge {
-  display: inline-block; padding: 3px 9px; border-radius: 99px;
-  font-size: 11px; font-weight: 600; white-space: nowrap;
-}
-.badge--green { background: var(--green-bg); color: var(--green-text); }
-.badge--amber { background: var(--amber-bg); color: var(--amber-text); }
-.badge--gray  { background: var(--gray-bg);  color: var(--gray-text);  }
-.badge--red   { background: var(--red-bg);   color: var(--red-text);   }
-.badge--blue  { background: var(--blue-bg);  color: var(--blue-text);  }
-
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: var(--brand); border: none; border-radius: var(--radius-md);
-  padding: 10px 18px; font-size: 13px; font-weight: 600;
-  color: var(--brand-deep); cursor: pointer; font-family: var(--font);
-  transition: background 0.15s; text-decoration: none;
-}
-.btn-primary:hover { background: var(--brand-dark); }
+.page-title { margin-bottom:3px }
+.campaign-name { font-size:13px;font-weight:500;color:var(--text-primary) }
+.campaign-desc { font-size:11px;color:var(--text-tertiary);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px }
+.td-muted  { font-size:12px;color:var(--text-secondary);line-height:1.6 }
+.td-center { text-align:center;font-size:13px }
+.td-action { text-align:right;color:var(--text-tertiary) }
+.td-action i { font-size:16px }
 </style>
