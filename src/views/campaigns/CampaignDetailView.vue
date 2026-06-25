@@ -79,7 +79,13 @@
         <div class="card-title">Campaign details</div>
         <div class="detail-row"><span class="detail-label">Commission type</span><span class="detail-value">{{ commissionTypeLabel }}</span></div>
         <div class="detail-row"><span class="detail-label">Amount per sale</span><span class="detail-value" style="color:var(--green-text)">{{ fmt.commissionDisplay(campaign) }}</span></div>
-        <div class="detail-row"><span class="detail-label">Commission trigger</span><span class="detail-value">{{ commissionTriggerLabel }}</span></div>
+        <div class="detail-row">
+          <span class="detail-label">{{ campaign.campaign_type === 'tiered' ? 'Commission window' : 'Commission trigger' }}</span>
+          <span class="detail-value">
+            <template v-if="campaign.campaign_type === 'tiered'">{{ campaign.tiered_period_days ?? 90 }} days after merchant signup</template>
+            <template v-else>{{ commissionTriggerLabel }}</template>
+          </span>
+        </div>
         <div class="detail-row"><span class="detail-label">Start date</span><span class="detail-value">{{ fmt.date(campaign.starts_at) }}</span></div>
         <div class="detail-row"><span class="detail-label">End condition</span><span class="detail-value">{{ endCondition }}</span></div>
         <div class="detail-row"><span class="detail-label">Eligible tier</span><span class="tag">{{ campaign.tier ?? 'All tiers' }}</span></div>

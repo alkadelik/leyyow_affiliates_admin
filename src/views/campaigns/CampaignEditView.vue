@@ -102,6 +102,12 @@
               </div>
             </div>
 
+            <div class="field" style="margin-bottom:14px">
+              <label>Commission window (days) <span class="req">*</span></label>
+              <input v-model.number="form.tiered_period_days" type="number" min="1" placeholder="e.g. 90" @wheel.prevent />
+              <div class="hint">Each merchant generates commission for this many days after their signup. After that, they still count toward your tier but no commission is paid.</div>
+            </div>
+
             <table class="tier-table">
               <thead>
                 <tr>
@@ -409,6 +415,7 @@ const form = ref({
   commission_trigger: '', commission_period_days: null,
   use_per_tier: false, commission_per_tier: {},
   subscriber_tier_type: 'flat_fee',
+  tiered_period_days: 90,
   subscriber_tiers: [{ min_subs: null, max_subs: null, commission_value_display: null }],
   start_date: '', end_date: '',
   use_max_conversions: false, max_conversions: null,
@@ -500,6 +507,7 @@ function populateForm(c) {
     description:           c.description ?? '',
     campaign_type:         c.campaign_type ?? 'fixed',
     subscriber_tier_type,
+    tiered_period_days:    c.tiered_period_days ?? 90,
     commission_enabled:    !!c.commission_type,
     commission_type:       c.commission_type ?? 'flat_fee',
     commission_value:      c.commission_value ? c.commission_value / 100 : null,
@@ -600,6 +608,7 @@ async function submit() {
       commission_type:    null,
       commission_value:   null,
       commission_trigger: null,
+      tiered_period_days: form.value.tiered_period_days || 90,
       starts_at:          form.value.start_date || null,
       ends_at:            form.value.end_date   || null,
       conversion_limit:   form.value.use_max_conversions ? form.value.max_conversions : null,
