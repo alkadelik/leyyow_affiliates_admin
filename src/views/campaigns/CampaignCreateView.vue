@@ -105,13 +105,14 @@
               </thead>
               <tbody>
                 <tr v-for="(tier, i) in form.subscriber_tiers" :key="i">
-                  <td><input v-model.number="tier.min_subs" type="number" min="0" placeholder="e.g. 11" /></td>
-                  <td><input v-model.number="tier.max_subs" type="number" min="0" placeholder="open-ended" /></td>
+                  <td><input v-model.number="tier.min_subs" type="number" min="0" placeholder="e.g. 11" @wheel.prevent /></td>
+                  <td><input v-model.number="tier.max_subs" type="number" min="0" placeholder="open-ended" @wheel.prevent /></td>
                   <td>
                     <input
                       v-model.number="tier.commission_value_display"
                       type="number" min="0" :max="form.subscriber_tier_type === 'percentage' ? 100 : undefined" step="any"
                       :placeholder="form.subscriber_tier_type === 'flat_fee' ? 'e.g. 500' : 'e.g. 10'"
+                      @wheel.prevent
                     />
                   </td>
                   <td>
