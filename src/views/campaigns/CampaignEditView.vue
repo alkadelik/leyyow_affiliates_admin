@@ -35,37 +35,107 @@
         <!-- Commission -->
         <div class="card">
           <div class="card-title">Commission structure</div>
-          <div class="toggle-row">
-            <div>
-              <div class="toggle-label">Commission enabled</div>
-              <div class="toggle-sub">Affiliates earn a reward per confirmed subscription payment</div>
+
+          <!-- Campaign type selector -->
+          <div class="radio-group" style="margin-bottom:16px">
+            <div
+              class="radio-opt" :class="{ on: form.campaign_type === 'fixed' }"
+              @click="form.campaign_type = 'fixed'"
+            >
+              <div class="radio-dot" :class="{ on: form.campaign_type === 'fixed' }" />
+              Fixed
             </div>
-            <div class="toggle" :class="{ on: form.commission_enabled }" @click="form.commission_enabled = !form.commission_enabled" />
+            <div
+              class="radio-opt" :class="{ on: form.campaign_type === 'tiered' }"
+              @click="form.campaign_type = 'tiered'"
+            >
+              <div class="radio-dot" :class="{ on: form.campaign_type === 'tiered' }" />
+              Tiered
+            </div>
           </div>
-          <div v-if="form.commission_enabled" class="commission-box">
-            <div class="radio-group">
-              <div v-for="t in commissionTypes" :key="t.value" class="radio-opt" :class="{ on: form.commission_type === t.value }" @click="form.commission_type = t.value">
-                <div class="radio-dot" :class="{ on: form.commission_type === t.value }" />
-                {{ t.label }}
-              </div>
-            </div>
-            <div class="field-row">
+
+          <!-- Fixed commission fields -->
+          <template v-if="form.campaign_type === 'fixed'">
+            <div class="toggle-row">
               <div>
-                <label>{{ form.commission_type === 'flat_fee' ? 'Amount per sale (₦)' : 'Percentage (%)' }} <span class="req">*</span></label>
-                <input v-model.number="form.commission_value" type="number" min="0" placeholder="e.g. 15000" />
-                <div class="hint">{{ form.commission_type === 'flat_fee' ? 'Enter amount in naira' : 'Enter percentage, e.g. 10 for 10%' }}</div>
+                <div class="toggle-label">Commission enabled</div>
+                <div class="toggle-sub">Affiliates earn a reward per confirmed subscription payment</div>
               </div>
-              <div v-if="form.commission_type !== 'flat_fee'">
-                <label>Cap amount (₦) <span v-if="form.commission_type === 'percentage_capped'" class="req">*</span></label>
-                <input v-model.number="form.commission_cap" type="number" min="0" placeholder="Optional" />
-                <div class="hint">Leave blank for no cap</div>
+              <div class="toggle" :class="{ on: form.commission_enabled }" @click="form.commission_enabled = !form.commission_enabled" />
+            </div>
+            <div v-if="form.commission_enabled" class="commission-box">
+              <div class="radio-group">
+                <div v-for="t in commissionTypes" :key="t.value" class="radio-opt" :class="{ on: form.commission_type === t.value }" @click="form.commission_type = t.value">
+                  <div class="radio-dot" :class="{ on: form.commission_type === t.value }" />
+                  {{ t.label }}
+                </div>
+              </div>
+              <div class="field-row">
+                <div>
+                  <label>{{ form.commission_type === 'flat_fee' ? 'Amount per sale (₦)' : 'Percentage (%)' }} <span class="req">*</span></label>
+                  <input v-model.number="form.commission_value" type="number" min="0" placeholder="e.g. 15000" />
+                  <div class="hint">{{ form.commission_type === 'flat_fee' ? 'Enter amount in naira' : 'Enter percentage, e.g. 10 for 10%' }}</div>
+                </div>
+                <div v-if="form.commission_type !== 'flat_fee'">
+                  <label>Cap amount (₦) <span v-if="form.commission_type === 'percentage_capped'" class="req">*</span></label>
+                  <input v-model.number="form.commission_cap" type="number" min="0" placeholder="Optional" />
+                  <div class="hint">Leave blank for no cap</div>
+                </div>
               </div>
             </div>
-          </div>
+          </template>
+
+          <!-- Tiered commission builder -->
+          <template v-else>
+            <div class="hint" style="margin-bottom:14px">
+              Set subscriber count ranges and the commission for each. Ranges are inclusive.
+              Leave "Max" blank on the last row for an open-ended tier.
+              Subscriber count is per affiliate on this campaign.
+            </div>
+
+            <div class="radio-group" style="margin-bottom:14px">
+              <div class="radio-opt" :class="{ on: form.subscriber_tier_type === 'flat_fee' }" @click="form.subscriber_tier_type = 'flat_fee'">
+                <div class="radio-dot" :class="{ on: form.subscriber_tier_type === 'flat_fee' }" /> Flat fee (₦)
+              </div>
+              <div class="radio-opt" :class="{ on: form.subscriber_tier_type === 'percentage' }" @click="form.subscriber_tier_type = 'percentage'">
+                <div class="radio-dot" :class="{ on: form.subscriber_tier_type === 'percentage' }" /> Percentage (%)
+              </div>
+            </div>
+
+            <table class="tier-table">
+              <thead>
+                <tr>
+                  <th>Min subs</th>
+                  <th>Max subs</th>
+                  <th>{{ form.subscriber_tier_type === 'flat_fee' ? 'Amount (₦)' : 'Percentage (%)' }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(tier, i) in form.subscriber_tiers" :key="i">
+                  <td><input v-model.number="tier.min_subs" type="number" min="0" placeholder="e.g. 11" /></td>
+                  <td><input v-model.number="tier.max_subs" type="number" min="0" placeholder="open-ended" /></td>
+                  <td>
+                    <input
+                      v-model.number="tier.commission_value_display"
+                      type="number" min="0" :max="form.subscriber_tier_type === 'percentage' ? 100 : undefined" step="any"
+                      :placeholder="form.subscriber_tier_type === 'flat_fee' ? 'e.g. 500' : 'e.g. 10'"
+                    />
+                  </td>
+                  <td>
+                    <button class="remove-btn" :disabled="form.subscriber_tiers.length === 1" @click="removeTier(i)">
+                      <i class="ti ti-x" />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <button class="add-tier-btn" @click="addTier"><i class="ti ti-plus" /> Add tier</button>
+          </template>
         </div>
 
-        <!-- Commission trigger -->
-        <div class="card">
+        <!-- Commission trigger (fixed only) -->
+        <div v-if="form.campaign_type === 'fixed'" class="card">
           <div class="card-title">Commission trigger <span class="req">*</span></div>
           <div class="field">
             <div class="radio-group radio-group--col">
@@ -90,8 +160,8 @@
           </div>
         </div>
 
-        <!-- Per-tier commission -->
-        <div class="card">
+        <!-- Per-tier commission (fixed only) -->
+        <div v-if="form.campaign_type === 'fixed'" class="card">
           <div class="card-title">Per-tier commission <span class="optional-label">— optional</span></div>
           <div class="toggle-row">
             <div>
@@ -193,14 +263,16 @@
             <i :class="form.start_date ? 'ti ti-circle-check check--done' : 'ti ti-circle check--empty'" />
             Start date
           </div>
-          <div class="checklist-row">
-            <i :class="form.commission_trigger ? 'ti ti-circle-check check--done' : 'ti ti-circle check--empty'" />
-            Commission trigger
-          </div>
-          <div class="checklist-row">
-            <i :class="triggerPeriodValid ? 'ti ti-circle-check check--done' : 'ti ti-circle check--empty'" />
-            Commission period
-          </div>
+          <template v-if="form.campaign_type === 'fixed'">
+            <div class="checklist-row">
+              <i :class="form.commission_trigger ? 'ti ti-circle-check check--done' : 'ti ti-circle check--empty'" />
+              Commission trigger
+            </div>
+            <div class="checklist-row">
+              <i :class="triggerPeriodValid ? 'ti ti-circle-check check--done' : 'ti ti-circle check--empty'" />
+              Commission period
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -226,10 +298,13 @@ const campaign   = ref(null)
 
 const form = ref({
   name: '', description: '',
+  campaign_type: 'fixed',
   commission_enabled: true, commission_type: 'flat_fee',
   commission_value: null, commission_cap: null,
   commission_trigger: '', commission_period_days: null,
   use_per_tier: false, commission_per_tier: {},
+  subscriber_tier_type: 'flat_fee',
+  subscriber_tiers: [{ min_subs: null, max_subs: null, commission_value_display: null }],
   start_date: '', end_date: '',
   use_max_conversions: false, max_conversions: null,
   tier: 'all', require_tc: true,
@@ -265,33 +340,63 @@ const tiers = [
   { value: 'burst', label: 'Burst', sub: 'Burst tier only',  placeholder: '10000' },
 ]
 
-const commissionValid = computed(() =>
-  !form.value.commission_enabled || (form.value.commission_type && form.value.commission_value > 0)
-)
+const commissionValid = computed(() => {
+  if (form.value.campaign_type === 'tiered') {
+    if (form.value.subscriber_tiers.length === 0) return false
+    const allFilled = form.value.subscriber_tiers.every(t =>
+      t.min_subs !== null && t.min_subs >= 0 && t.commission_value_display > 0
+    )
+    if (!allFilled) return false
+    if (form.value.subscriber_tier_type === 'percentage') {
+      return form.value.subscriber_tiers.every(t => t.commission_value_display <= 100)
+    }
+    return true
+  }
+  return !form.value.commission_enabled || (form.value.commission_type && form.value.commission_value > 0)
+})
 
 const triggerPeriodValid = computed(() =>
   form.value.commission_trigger !== 'subscriptions_within_period' ||
   (form.value.commission_period_days > 0)
 )
 
-// ── Populate form from existing campaign ──────────────────────────────────────
+function addTier() {
+  form.value.subscriber_tiers.push({ min_subs: null, max_subs: null, commission_value_display: null })
+}
+
+function removeTier(i) {
+  form.value.subscriber_tiers.splice(i, 1)
+}
+
 function populateForm(c) {
   const perTier = c.commission_per_tier ?? {}
+
+  const subscriber_tier_type = c.subscriber_tiers?.[0]?.commission_type ?? 'flat_fee'
+  let subscriber_tiers = [{ min_subs: null, max_subs: null, commission_value_display: null }]
+  if (c.subscriber_tiers && c.subscriber_tiers.length > 0) {
+    subscriber_tiers = c.subscriber_tiers.map(t => ({
+      min_subs:                 t.min_subs,
+      max_subs:                 t.max_subs ?? null,
+      commission_value_display: t.commission_value / 100,
+    }))
+  }
+
   form.value = {
     name:                  c.name ?? '',
     description:           c.description ?? '',
+    campaign_type:         c.campaign_type ?? 'fixed',
+    subscriber_tier_type,
     commission_enabled:    !!c.commission_type,
     commission_type:       c.commission_type ?? 'flat_fee',
-    // Convert kobo back to naira for display
     commission_value:      c.commission_value ? c.commission_value / 100 : null,
     commission_cap:        c.commission_cap   ? c.commission_cap   / 100 : null,
     commission_trigger:    c.commission_trigger ?? '',
     commission_period_days: c.commission_period_days ?? null,
     use_per_tier:          Object.keys(perTier).length > 0,
-    // Convert per-tier kobo values back to naira
     commission_per_tier:   Object.fromEntries(
                              Object.entries(perTier).map(([k, v]) => [k, v / 100])
                            ),
+    subscriber_tiers,
     start_date:            c.starts_at ? c.starts_at.split('T')[0] : '',
     end_date:              c.ends_at   ? c.ends_at.split('T')[0]   : '',
     use_max_conversions:   !!c.conversion_limit,
@@ -304,7 +409,6 @@ function populateForm(c) {
 onMounted(async () => {
   try {
     const { data } = await api.get(`/admin/campaigns/${route.params.id}/`)
-    // Guard: only draft and scheduled campaigns are editable
     if (!['draft', 'scheduled'].includes(data.status)) {
       toast.show('This campaign can no longer be edited.', 'error')
       router.replace(`/campaigns/${route.params.id}`)
@@ -319,46 +423,62 @@ onMounted(async () => {
   }
 })
 
-// ── Submit ────────────────────────────────────────────────────────────────────
-async function submit(action) {
+async function submit() {
   if (!form.value.name.trim()) { toast.show('Campaign name is required.', 'error'); return }
-
-  if (action === 'start') {
-    if (!form.value.start_date) { toast.show('Start date is required.', 'error'); return }
-    if (!form.value.commission_trigger) { toast.show('Commission trigger is required.', 'error'); return }
-    if (!triggerPeriodValid.value) { toast.show('Commission period (days) is required.', 'error'); return }
-    if (form.value.commission_enabled && !form.value.commission_value) {
-      toast.show('Commission value is required.', 'error'); return
-    }
-  }
 
   submitting.value = true
 
-  let commission_per_tier = null
-  if (form.value.use_per_tier) {
-    const entries = Object.entries(form.value.commission_per_tier)
-      .filter(([, v]) => v > 0)
-      .map(([k, v]) => [k, Math.round(v * 100)])
-    if (entries.length) commission_per_tier = Object.fromEntries(entries)
-  }
+  let payload
 
-  const payload = {
-    is_draft: true,
-    name: form.value.name.trim(),
-    description: form.value.description.trim(),
-    commission_type: form.value.commission_enabled ? form.value.commission_type : null,
-    commission_value: form.value.commission_enabled ? Math.round(form.value.commission_value * 100) : 0,
-    commission_cap: (form.value.commission_cap && form.value.commission_type === 'percentage_capped')
-                ? Math.round(form.value.commission_cap * 100) : null,
-    commission_trigger: form.value.commission_trigger || null,
-    commission_period_days: form.value.commission_trigger === 'subscriptions_within_period'
-                ? form.value.commission_period_days : null,
-    commission_per_tier,
-    starts_at: form.value.start_date || null,
-    ends_at: form.value.end_date   || null,
-    conversion_limit: form.value.use_max_conversions ? form.value.max_conversions : null,
-    tier: form.value.tier,
-    require_tc: form.value.require_tc,
+  if (form.value.campaign_type === 'tiered') {
+    payload = {
+      is_draft:      true,
+      name:          form.value.name.trim(),
+      description:   form.value.description.trim(),
+      campaign_type: 'tiered',
+      subscriber_tiers: form.value.subscriber_tiers.map(t => ({
+        min_subs:         t.min_subs,
+        max_subs:         t.max_subs || null,
+        commission_type:  form.value.subscriber_tier_type,
+        commission_value: Math.round((t.commission_value_display || 0) * 100),
+      })),
+      commission_type:    null,
+      commission_value:   null,
+      commission_trigger: null,
+      starts_at:          form.value.start_date || null,
+      ends_at:            form.value.end_date   || null,
+      conversion_limit:   form.value.use_max_conversions ? form.value.max_conversions : null,
+      tier:               form.value.tier,
+      require_tc:         form.value.require_tc,
+    }
+  } else {
+    let commission_per_tier = null
+    if (form.value.use_per_tier) {
+      const entries = Object.entries(form.value.commission_per_tier)
+        .filter(([, v]) => v > 0)
+        .map(([k, v]) => [k, Math.round(v * 100)])
+      if (entries.length) commission_per_tier = Object.fromEntries(entries)
+    }
+
+    payload = {
+      is_draft:      true,
+      name:          form.value.name.trim(),
+      description:   form.value.description.trim(),
+      campaign_type: 'fixed',
+      commission_type: form.value.commission_enabled ? form.value.commission_type : null,
+      commission_value: form.value.commission_enabled ? Math.round(form.value.commission_value * 100) : 0,
+      commission_cap: (form.value.commission_cap && form.value.commission_type === 'percentage_capped')
+        ? Math.round(form.value.commission_cap * 100) : null,
+      commission_trigger: form.value.commission_trigger || null,
+      commission_period_days: form.value.commission_trigger === 'subscriptions_within_period'
+        ? form.value.commission_period_days : null,
+      commission_per_tier,
+      starts_at:        form.value.start_date || null,
+      ends_at:          form.value.end_date   || null,
+      conversion_limit: form.value.use_max_conversions ? form.value.max_conversions : null,
+      tier:             form.value.tier,
+      require_tc:       form.value.require_tc,
+    }
   }
 
   try {
@@ -412,6 +532,9 @@ async function submit(action) {
 .tier-opt { border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 8px;cursor:pointer;text-align:center;font-size:12px;font-weight:500;background:var(--surface);transition:all 0.1s }
 .tier-opt.on { border-color:var(--brand);background:var(--pollen-light);font-weight:600 }
 .tier-sub { font-size:10px;color:var(--text-tertiary);margin-top:3px;font-weight:400 }
+.remove-btn { background:none;border:none;cursor:pointer;color:var(--text-tertiary);font-size:16px;padding:2px }
+.remove-btn:hover:not(:disabled) { color:var(--red-text) }
+.remove-btn:disabled { opacity:0.3;cursor:not-allowed }
 .btn-start { width:100%;padding:12px;border-radius:var(--radius-md);border:none;background:var(--brand);font-size:13px;color:var(--brand-deep);cursor:pointer;font-weight:600;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:7px;transition:background 0.15s }
 .btn-start:hover:not(:disabled) { background:var(--brand-dark) }
 .btn-draft { width:100%;padding:12px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);font-size:13px;color:var(--text-primary);cursor:pointer;font-weight:500;font-family:var(--font);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:7px;transition:background 0.1s }
@@ -423,4 +546,14 @@ async function submit(action) {
 .checklist-row:last-child { border-bottom:none }
 .check--done { font-size:15px;color:var(--green-text) }
 .check--empty { font-size:15px;color:var(--text-tertiary) }
+
+/* ── Tier builder ── */
+.tier-table { width:100%;border-collapse:collapse;font-size:13px }
+.tier-table th { font-size:11px;font-weight:500;color:var(--text-tertiary);text-align:left;padding:0 6px 8px;border-bottom:1px solid var(--border) }
+.tier-table td { padding:6px 6px 0 }
+.tier-table input,.tier-table select { width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:var(--radius-md);font-size:12px;color:var(--text-primary);background:var(--surface);font-family:var(--font) }
+.tier-table select { cursor:pointer }
+.tier-table input:focus,.tier-table select:focus { outline:none;border-color:var(--brand) }
+.add-tier-btn { margin-top:10px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--brand-deep);background:var(--pollen-light);border:1px solid #F0D890;border-radius:var(--radius-md);padding:7px 12px;cursor:pointer;font-family:var(--font);transition:background 0.1s }
+.add-tier-btn:hover { background:var(--pollen) }
 </style>

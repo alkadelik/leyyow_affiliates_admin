@@ -17,6 +17,9 @@
           <div class="settings-nav-item" :class="{ active: section === 'payouts' }" @click="section = 'payouts'">
             <i class="ti ti-cash" /> Payouts
           </div>
+          <div class="settings-nav-item" :class="{ active: section === 'commissions' }" @click="section = 'commissions'">
+            <i class="ti ti-percentage" /> Commissions
+          </div>
           <div class="settings-nav-item" :class="{ active: section === 'tracking' }" @click="section = 'tracking'">
             <i class="ti ti-link" /> Tracking
           </div>
@@ -40,6 +43,15 @@
                 <div class="hint">Affiliates cannot withdraw below this amount.</div>
               </div>
 
+              <div class="field" style="margin-bottom: 20px">
+                <label>Transfer fee</label>
+                <div class="input-prefix">
+                  <span class="input-prefix-label">₦</span>
+                  <input v-model.number="form.transfer_fee_naira" type="number" min="0" step="10" />
+                </div>
+                <div class="hint">Fixed fee deducted from each payout disbursement.</div>
+              </div>
+
               <div class="toggle-row">
                 <div>
                   <div class="toggle-label">Auto-approve payouts</div>
@@ -50,6 +62,37 @@
                   :class="{ on: form.payout_auto_approve }"
                   @click="form.payout_auto_approve = !form.payout_auto_approve"
                 />
+              </div>
+
+              <Transition name="fade">
+                <div v-if="error" class="error-banner" style="margin-top:14px">
+                  <i class="ti ti-alert-circle" /> {{ error }}
+                </div>
+              </Transition>
+
+              <div class="save-row">
+                <button class="btn-cancel" @click="resetForm">Cancel</button>
+                <button class="btn-save" :disabled="saving" @click="save">
+                  <i v-if="saving" class="ti ti-loader-2 spin" />
+                  {{ saving ? 'Saving…' : 'Save changes' }}
+                </button>
+              </div>
+            </div>
+          </template>
+
+          <!-- Commissions -->
+          <template v-if="section === 'commissions'">
+            <div class="card">
+              <div class="card-section-title">Commission settings</div>
+              <div class="card-section-sub">Configure rules that apply to commission calculations and reversals.</div>
+
+              <div class="field">
+                <label>Refund window</label>
+                <div class="input-prefix">
+                  <input v-model.number="form.refund_window_days" type="number" min="0" step="1" style="border-radius: var(--radius-md) 0 0 var(--radius-md)" />
+                  <span class="input-prefix-label" style="border-left: 1px solid var(--border); border-right: none; border-radius: 0 var(--radius-md) var(--radius-md) 0">days</span>
+                </div>
+                <div class="hint">If a merchant cancels within this many days of their first subscription, their affiliate's commission is reversed.</div>
               </div>
 
               <Transition name="fade">
@@ -117,6 +160,8 @@ const section = ref('payouts')
 const form = ref({
   payout_auto_approve:      true,
   minimum_withdrawal_naira: 50000,
+  transfer_fee_naira:       100,
+  refund_window_days:       30,
   tracking_base_url:        '',
 })
 
@@ -127,6 +172,8 @@ onMounted(async () => {
     const { data } = await api.get('/admin/settings/')
     form.value.payout_auto_approve      = data.payout_auto_approve
     form.value.minimum_withdrawal_naira = Math.floor(data.minimum_withdrawal_kobo / 100)
+    form.value.transfer_fee_naira       = Math.floor(data.transfer_fee / 100)
+    form.value.refund_window_days       = data.refund_window_days
     form.value.tracking_base_url        = data.tracking_base_url || ''
     original = { ...form.value }
   } finally {
@@ -146,10 +193,14 @@ async function save() {
     const { data } = await api.patch('/admin/settings/', {
       payout_auto_approve:     form.value.payout_auto_approve,
       minimum_withdrawal_kobo: Math.round(form.value.minimum_withdrawal_naira * 100),
+      transfer_fee:            Math.round(form.value.transfer_fee_naira * 100),
+      refund_window_days:      form.value.refund_window_days,
       tracking_base_url:       form.value.tracking_base_url.trim(),
     })
     form.value.payout_auto_approve      = data.payout_auto_approve
     form.value.minimum_withdrawal_naira = Math.floor(data.minimum_withdrawal_kobo / 100)
+    form.value.transfer_fee_naira       = Math.floor(data.transfer_fee / 100)
+    form.value.refund_window_days       = data.refund_window_days
     form.value.tracking_base_url        = data.tracking_base_url || ''
     original = { ...form.value }
     toast.show('Settings saved.', 'success')

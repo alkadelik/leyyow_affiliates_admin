@@ -179,20 +179,12 @@ onMounted(async () => {
       api.get('/admin/wallet/management/'),
     ])
     payouts.value = payRes.data.results ?? payRes.data
-    const w = walletRes.data.wallet
-    const t = walletRes.data.payout_totals
-    const pendingList = payouts.value.filter(p => p.status === 'pending')
-    // stats.value = {
-    //   pending_count:  pendingList.length,
-    //   pending_amount: pendingList.reduce((s, p) => s + (p.requested_amount ?? 0), 0),
-    //   total_paid:     t.total_paid     ?? 0,
-    //   wallet_balance: w.balance        ?? 0,
-    // }
+    const d = walletRes.data
     stats.value = {
-      pending_count:  t.count_pending  ?? 0,
-      pending_amount: t.total_pending  ?? 0,
-      total_paid:     t.total_paid     ?? 0,
-      wallet_balance: w.balance        ?? 0,
+      pending_count:  payouts.value.filter(p => p.status === 'pending').length,
+      pending_amount: d.pending_disbursement ?? 0,
+      total_paid:     d.total_disbursed      ?? 0,
+      wallet_balance: d.balance              ?? 0,
     }
   } finally {
     loading.value = false
