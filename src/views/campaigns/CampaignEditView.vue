@@ -230,6 +230,111 @@
             <div class="toggle" :class="{ on: form.require_tc }" @click="form.require_tc = !form.require_tc" />
           </div>
         </div>
+
+        <!-- Merchant offer -->
+        <div class="card">
+          <div class="card-title">Merchant offer <span class="optional-label">— optional</span></div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Enable merchant offer</div>
+              <div class="toggle-sub">Referred merchants receive a special benefit on signup</div>
+            </div>
+            <div class="toggle" :class="{ on: form.offer_enabled }" @click="form.offer_enabled = !form.offer_enabled" />
+          </div>
+
+          <div v-if="form.offer_enabled" class="commission-box" style="margin-top:14px">
+            <div class="field" style="margin-bottom:14px">
+              <label>Applicable to</label>
+              <div class="radio-group" style="margin-bottom:0">
+                <div class="radio-opt" :class="{ on: form.offer.applicable_to === 'trial' }" @click="form.offer.applicable_to = 'trial'">
+                  <div class="radio-dot" :class="{ on: form.offer.applicable_to === 'trial' }" /> Trial
+                </div>
+                <div class="radio-opt" :class="{ on: form.offer.applicable_to === 'subscription' }" @click="form.offer.applicable_to = 'subscription'">
+                  <div class="radio-dot" :class="{ on: form.offer.applicable_to === 'subscription' }" /> Subscription
+                </div>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:14px">
+              <label>Offer type</label>
+              <div class="radio-group" style="margin-bottom:0">
+                <div class="radio-opt" :class="{ on: form.offer.type === 'extension' }" @click="form.offer.type = 'extension'">
+                  <div class="radio-dot" :class="{ on: form.offer.type === 'extension' }" /> Extension
+                </div>
+                <div class="radio-opt" :class="{ on: form.offer.type === 'discount' }" @click="form.offer.type = 'discount'">
+                  <div class="radio-dot" :class="{ on: form.offer.type === 'discount' }" /> Discount
+                </div>
+              </div>
+            </div>
+            <div v-if="form.offer.type === 'extension'" class="field" style="margin-bottom:14px">
+              <label>Extension (days) <span class="req">*</span></label>
+              <input v-model.number="form.offer.extension_days" type="number" min="1" placeholder="e.g. 30" @wheel.prevent />
+            </div>
+            <template v-if="form.offer.type === 'discount'">
+              <div class="field" style="margin-bottom:14px">
+                <label>Discount type</label>
+                <div class="radio-group" style="margin-bottom:0">
+                  <div class="radio-opt" :class="{ on: form.offer.discount_subtype === 'amount' }" @click="form.offer.discount_subtype = 'amount'">
+                    <div class="radio-dot" :class="{ on: form.offer.discount_subtype === 'amount' }" /> Amount (₦)
+                  </div>
+                  <div class="radio-opt" :class="{ on: form.offer.discount_subtype === 'percentage' }" @click="form.offer.discount_subtype = 'percentage'">
+                    <div class="radio-dot" :class="{ on: form.offer.discount_subtype === 'percentage' }" /> Percentage (%)
+                  </div>
+                </div>
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label>{{ form.offer.discount_subtype === 'amount' ? 'Discount amount (₦)' : 'Discount (%)' }} <span class="req">*</span></label>
+                <input v-model.number="form.offer.discount_value" type="number" min="0" :max="form.offer.discount_subtype === 'percentage' ? 100 : undefined" placeholder="e.g. 20" @wheel.prevent />
+                <div class="hint">{{ form.offer.discount_subtype === 'amount' ? 'Enter amount in naira' : 'Enter percentage, e.g. 20 for 20%' }}</div>
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label>Applies</label>
+                <div class="radio-group" style="margin-bottom:0">
+                  <div class="radio-opt" :class="{ on: form.offer.discount_recurrence === 'once' }" @click="form.offer.discount_recurrence = 'once'">
+                    <div class="radio-dot" :class="{ on: form.offer.discount_recurrence === 'once' }" /> Once
+                  </div>
+                  <div class="radio-opt" :class="{ on: form.offer.discount_recurrence === 'n_times' }" @click="form.offer.discount_recurrence = 'n_times'">
+                    <div class="radio-dot" :class="{ on: form.offer.discount_recurrence === 'n_times' }" /> N times
+                  </div>
+                  <div class="radio-opt" :class="{ on: form.offer.discount_recurrence === 'forever' }" @click="form.offer.discount_recurrence = 'forever'">
+                    <div class="radio-dot" :class="{ on: form.offer.discount_recurrence === 'forever' }" /> Forever
+                  </div>
+                </div>
+              </div>
+              <div v-if="form.offer.discount_recurrence === 'n_times'" class="field" style="margin-bottom:14px">
+                <label>Number of times <span class="req">*</span></label>
+                <input v-model.number="form.offer.discount_recurrence_count" type="number" min="1" placeholder="e.g. 3" @wheel.prevent />
+              </div>
+              <div class="toggle-row" style="border-top:1px solid var(--border);margin-top:4px">
+                <div>
+                  <div class="toggle-label">Lifetime condition</div>
+                  <div class="toggle-sub">Merchant permanently loses the offer after too many missed payments</div>
+                </div>
+                <div class="toggle" :class="{ on: form.offer.has_lifetime_condition }" @click="form.offer.has_lifetime_condition = !form.offer.has_lifetime_condition" />
+              </div>
+              <div v-if="form.offer.has_lifetime_condition" class="field" style="margin-top:12px;margin-bottom:14px">
+                <label>Max missed payments (cumulative) <span class="req">*</span></label>
+                <input v-model.number="form.offer.condition_threshold" type="number" min="1" placeholder="e.g. 2" @wheel.prevent />
+                <div class="hint">Merchant loses the offer after this many total missed payments</div>
+              </div>
+            </template>
+            <div class="field-row" style="margin-bottom:14px">
+              <div>
+                <label>Offer valid from <span class="req">*</span></label>
+                <input v-model="form.offer.valid_from" type="date" />
+              </div>
+              <div>
+                <label>Offer valid until</label>
+                <input v-model="form.offer.valid_until" type="date" />
+                <div class="hint">Leave blank for no end date</div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Redemption window (days) <span class="req">*</span></label>
+              <input v-model.number="form.offer.redemption_window_days" type="number" min="1" placeholder="e.g. 30" @wheel.prevent />
+              <div class="hint">Days after signup the merchant has to use the offer</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- RIGHT SIDEBAR -->
@@ -308,6 +413,15 @@ const form = ref({
   start_date: '', end_date: '',
   use_max_conversions: false, max_conversions: null,
   tier: 'all', require_tc: true,
+  offer_enabled: false,
+  offer: {
+    applicable_to: 'subscription', type: 'discount',
+    extension_days: null,
+    discount_subtype: 'percentage', discount_value: null,
+    discount_recurrence: 'once', discount_recurrence_count: null,
+    has_lifetime_condition: false, condition_threshold: null,
+    redemption_window_days: 30, valid_from: '', valid_until: '',
+  },
 })
 
 const commissionTypes = [
@@ -403,6 +517,27 @@ function populateForm(c) {
     max_conversions:       c.conversion_limit ?? null,
     tier:                  c.tier ?? 'all',
     require_tc:            c.require_tc ?? false,
+    offer_enabled: !!c.offer,
+    offer: c.offer ? {
+      applicable_to:           c.offer.applicable_to ?? 'subscription',
+      type:                    c.offer.type ?? 'discount',
+      extension_days:          c.offer.extension_days ?? null,
+      discount_subtype:        c.offer.discount_subtype ?? 'percentage',
+      discount_value:          c.offer.discount_value != null ? c.offer.discount_value / 100 : null,
+      discount_recurrence:     c.offer.discount_recurrence ?? 'once',
+      discount_recurrence_count: c.offer.discount_recurrence_count ?? null,
+      has_lifetime_condition:  c.offer.has_lifetime_condition ?? false,
+      condition_threshold:     c.offer.condition_threshold ?? null,
+      redemption_window_days:  c.offer.merchant_redemption_window_days ?? 30,
+      valid_from:              c.offer.offer_valid_from  ? c.offer.offer_valid_from.split('T')[0]  : '',
+      valid_until:             c.offer.offer_valid_until ? c.offer.offer_valid_until.split('T')[0] : '',
+    } : {
+      applicable_to: 'subscription', type: 'discount',
+      extension_days: null, discount_subtype: 'percentage', discount_value: null,
+      discount_recurrence: 'once', discount_recurrence_count: null,
+      has_lifetime_condition: false, condition_threshold: null,
+      redemption_window_days: 30, valid_from: '', valid_until: '',
+    },
   }
 }
 
@@ -422,6 +557,26 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+function buildOfferPayload() {
+  if (!form.value.offer_enabled) return null
+  const o = form.value.offer
+  return {
+    applicable_to:                   o.applicable_to,
+    type:                            o.type,
+    extension_days:                  o.type === 'extension' ? o.extension_days : null,
+    discount_subtype:                o.type === 'discount' ? o.discount_subtype : null,
+    discount_value:                  o.type === 'discount' ? Math.round((o.discount_value || 0) * 100) : null,
+    discount_recurrence:             o.type === 'discount' ? o.discount_recurrence : null,
+    discount_recurrence_count:       (o.type === 'discount' && o.discount_recurrence === 'n_times') ? o.discount_recurrence_count : null,
+    has_lifetime_condition:          o.type === 'discount' && o.has_lifetime_condition,
+    condition_type:                  (o.type === 'discount' && o.has_lifetime_condition) ? 'missed_payment' : null,
+    condition_threshold:             (o.type === 'discount' && o.has_lifetime_condition) ? o.condition_threshold : null,
+    merchant_redemption_window_days: o.redemption_window_days,
+    offer_valid_from:                o.valid_from,
+    offer_valid_until:               o.valid_until || null,
+  }
+}
 
 async function submit() {
   if (!form.value.name.trim()) { toast.show('Campaign name is required.', 'error'); return }
@@ -450,6 +605,7 @@ async function submit() {
       conversion_limit:   form.value.use_max_conversions ? form.value.max_conversions : null,
       tier:               form.value.tier,
       require_tc:         form.value.require_tc,
+      offer:              buildOfferPayload(),
     }
   } else {
     let commission_per_tier = null
@@ -478,6 +634,7 @@ async function submit() {
       conversion_limit: form.value.use_max_conversions ? form.value.max_conversions : null,
       tier:             form.value.tier,
       require_tc:       form.value.require_tc,
+      offer:            buildOfferPayload(),
     }
   }
 

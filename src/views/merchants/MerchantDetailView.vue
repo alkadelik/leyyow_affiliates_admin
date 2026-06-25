@@ -155,6 +155,72 @@
         </div>
       </div>
 
+      <!-- Offer redemption card -->
+      <div class="card" style="margin-top:14px">
+        <div class="card-title">Merchant offer</div>
+        <template v-if="merchant.offer_redemption">
+          <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="badge" :class="offerStatusCls(merchant.offer_redemption.status)">
+              <span class="badge-dot" />{{ merchant.offer_redemption.status }}
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Type</span>
+            <span class="detail-value" style="text-transform:capitalize">{{ merchant.offer_redemption.offer.type }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Applies to</span>
+            <span class="detail-value" style="text-transform:capitalize">{{ merchant.offer_redemption.offer.applicable_to }}</span>
+          </div>
+          <template v-if="merchant.offer_redemption.offer.type === 'extension'">
+            <div class="detail-row">
+              <span class="detail-label">Extension</span>
+              <span class="detail-value">{{ merchant.offer_redemption.offer.extension_days }} days</span>
+            </div>
+          </template>
+          <template v-else>
+            <div class="detail-row">
+              <span class="detail-label">Discount</span>
+              <span class="detail-value">
+                {{ merchant.offer_redemption.offer.discount_subtype === 'percentage'
+                    ? (merchant.offer_redemption.offer.discount_value / 100) + '%'
+                    : '₦' + (merchant.offer_redemption.offer.discount_value / 100).toLocaleString() }}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Applies</span>
+              <span class="detail-value" style="text-transform:capitalize">
+                {{ merchant.offer_redemption.offer.discount_recurrence === 'n_times'
+                    ? merchant.offer_redemption.offer.discount_recurrence_count + ' times'
+                    : merchant.offer_redemption.offer.discount_recurrence }}
+              </span>
+            </div>
+            <div v-if="merchant.offer_redemption.offer.has_lifetime_condition" class="detail-row">
+              <span class="detail-label">Condition</span>
+              <span class="detail-value">Forfeited after {{ merchant.offer_redemption.offer.condition_threshold }} missed payment{{ merchant.offer_redemption.offer.condition_threshold > 1 ? 's' : '' }}</span>
+            </div>
+          </template>
+          <div class="detail-row">
+            <span class="detail-label">Times applied</span>
+            <span class="detail-value">{{ merchant.offer_redemption.times_applied }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Redemption window expires</span>
+            <span class="detail-value">{{ fmt.date(merchant.offer_redemption.expires_at) }}</span>
+          </div>
+          <div v-if="merchant.offer_redemption.forfeited_at" class="detail-row">
+            <span class="detail-label">Forfeited at</span>
+            <span class="detail-value" style="color:var(--red-text)">{{ fmt.date(merchant.offer_redemption.forfeited_at) }}</span>
+          </div>
+          <div v-if="merchant.offer_redemption.exhausted_at" class="detail-row">
+            <span class="detail-label">Exhausted at</span>
+            <span class="detail-value">{{ fmt.date(merchant.offer_redemption.exhausted_at) }}</span>
+          </div>
+        </template>
+        <div v-else class="empty-inline">No offer on this merchant's account.</div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -178,6 +244,10 @@ const totalCommission = computed(() =>
 
 function commissionCls(s) {
   return { earned: 'badge--green', reversed: 'badge--red' }[s] ?? 'badge--gray'
+}
+
+function offerStatusCls(s) {
+  return { active: 'badge--blue', ongoing: 'badge--green', exhausted: 'badge--gray', expired: 'badge--gray', forfeited: 'badge--red' }[s] ?? 'badge--gray'
 }
 
 onMounted(async () => {

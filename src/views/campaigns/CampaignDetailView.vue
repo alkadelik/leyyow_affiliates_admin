@@ -92,6 +92,60 @@
         <div class="detail-row"><span class="detail-label">Link prefix</span><span class="code-pill">leyyow.com/ref/</span></div>
         <div class="detail-row"><span class="detail-label">Code format</span><span class="detail-value">Auto + customisable</span></div>
       </div>
+
+      <!-- Merchant offer summary -->
+      <div v-if="campaign.offer" class="card">
+        <div class="card-title">Merchant offer</div>
+        <div class="detail-row">
+          <span class="detail-label">Applies to</span>
+          <span class="detail-value" style="text-transform:capitalize">{{ campaign.offer.applicable_to }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Type</span>
+          <span class="detail-value" style="text-transform:capitalize">{{ campaign.offer.type }}</span>
+        </div>
+        <template v-if="campaign.offer.type === 'extension'">
+          <div class="detail-row">
+            <span class="detail-label">Extension</span>
+            <span class="detail-value">{{ campaign.offer.extension_days }} days</span>
+          </div>
+        </template>
+        <template v-else>
+          <div class="detail-row">
+            <span class="detail-label">Discount</span>
+            <span class="detail-value">
+              {{ campaign.offer.discount_subtype === 'percentage'
+                  ? (campaign.offer.discount_value / 100) + '%'
+                  : '₦' + (campaign.offer.discount_value / 100).toLocaleString() }}
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Applies</span>
+            <span class="detail-value" style="text-transform:capitalize">
+              {{ campaign.offer.discount_recurrence === 'n_times'
+                  ? campaign.offer.discount_recurrence_count + ' times'
+                  : campaign.offer.discount_recurrence }}
+            </span>
+          </div>
+          <div v-if="campaign.offer.has_lifetime_condition" class="detail-row">
+            <span class="detail-label">Condition</span>
+            <span class="detail-value">Forfeited after {{ campaign.offer.condition_threshold }} missed payment{{ campaign.offer.condition_threshold > 1 ? 's' : '' }}</span>
+          </div>
+        </template>
+        <div class="detail-row">
+          <span class="detail-label">Redemption window</span>
+          <span class="detail-value">{{ campaign.offer.merchant_redemption_window_days }} days after signup</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Offer valid from</span>
+          <span class="detail-value">{{ fmt.date(campaign.offer.offer_valid_from) }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Offer valid until</span>
+          <span class="detail-value">{{ campaign.offer.offer_valid_until ? fmt.date(campaign.offer.offer_valid_until) : 'No end date' }}</span>
+        </div>
+      </div>
+      <div v-else class="card" style="color:var(--text-tertiary);font-size:13px">No merchant offer on this campaign.</div>
     </div>
 
     <!-- Affiliates / Merchants tab table -->
